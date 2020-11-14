@@ -13,9 +13,16 @@ MongoClient.connect(url,(err,client)=>{
     //         return console.log('unable to write to Todos',err);
     //     console.log(JSON.stringify(res.ops,undefined,2));
     // });
-    db.collection('Users').insertOne({username:'Ben',birthdate:new Date(1997,5,15)},(err,res)=>{
+    let users = [{username:'Aokiji',birthdate:new Date(1985,5,15)},{username:'Naruto',birthdate:new Date(1999,5,15)},{username:'Luffy',birthdate:new Date(1999,5,15)}];
+    let tasks = [{text:"defeat Madara", completed:true},{text:"defeat Kaido", completed:false},{text:"stop world government plans", completed:false}];
+    // db.collection('Users').insertMany(users,(err,res)=>{
+    //     if(err)
+    //         return console.log('unable to insert user to Users collection');
+    //     console.log(JSON.stringify(res.ops,undefined,2));
+    // });
+    db.collection('Todos').insertMany(tasks,(err,res)=>{
         if(err)
-            return console.log('unable to insert user to Users collection');
+            return console.log('unable to write to Todos',err);
         console.log(JSON.stringify(res.ops,undefined,2));
     });
     client.close();
