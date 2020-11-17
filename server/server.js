@@ -20,6 +20,19 @@ app.post('/todos',(req,res)=>{
         .catch(err => res.status(400).send(err));
 });
 
+app.delete('/todos/:id',(req,res)=>{
+    let {id} = req.params;
+    if (!ObjectID.isValid(id))
+        return res.status(404).send();
+    Todo.findByIdAndDelete(id)
+        .then((doc)=>{
+         if(!doc)
+            return res.status(404).send();
+        res.status(200).send({message:'this doc has been removed from database',doc});
+    })
+    .catch(err => res.status(400).send());
+});
+
 app.get('/todos',(req,res)=>{
     Todo.find().then(docs => res.send({todos:docs})).catch(err => res.status(400).send(err));
 });
