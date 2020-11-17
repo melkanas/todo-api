@@ -6,13 +6,17 @@
   "scripts": {
     "test": "nodemon --exec \"mocha server/**/*.test.js \" "
   },
+  "engines": {
+    "node": "10.16.0"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "dotenv": "^8.2.0",
     "express": "^4.14.0",
-    "mongodb": "^2.2.5",
-    "mongoose": "^4.5.9"
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.10.15"
   },
   "devDependencies": {
     "expect": "^1.20.2",
