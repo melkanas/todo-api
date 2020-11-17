@@ -1,9 +1,10 @@
 const expect = require('expect');
 const request = require('supertest');
+const {ObjectId} = require('mongoDb');
 const {app} = require('../server');
 const {Todo} = require('../models/todo');
 
-let todos = [{text:'workout'},{text:'meditate'},{text:'study for exam'}];
+let todos = [{text:'workout',_id:new ObjectId()},{text:'meditate',_id:new ObjectId()},{text:'study for exam',_id:new ObjectId()}];
 beforeEach((done)=>{
     Todo.remove({}).then(()=> Todo.insertMany(todos)).then(()=>done()).catch(err => done(err));
 });
@@ -35,11 +36,35 @@ describe('GET todos',()=>{
         request(app)
         .get('/todos')
         .expect(200)
-        .expect((res) => expect(res.body.todos.map(elt=>{
-            let obj ={};
-            obj.text = elt.text;
-            return obj;
-        })).toEqual(todos))
+        .expect((res) => expect(res.body.todos.map(elt => elt.text)).toEqual(todos.map(elt=>elt.text)))
         .end(done);
     })
+});
+
+describe('get /todos/:id',()=>{
+    
+    it('should return a doc',(done)=>{
+        let id = todos[0]._id
+        request(app)
+        .get('/todos/'+id.toHexString())
+        .expect(200)
+        .expect((res) => expect(res.body.todo.text).toBe(todos[0].text))
+        .end(done);
+    });
+
+    it('should return a 404 if todo not found',(done)=>{
+        let id = new ObjectId();
+        request(app)
+        .get('/todos/'+id.toHexString())
+        .expect(404)
+        .end(done);
+    });
+    
+    it('should return a 404 for non object ids',(done)=>{
+        request(app)
+        .get('/todos/123')
+        .expect(404)
+        .end(done)
+        
+    });
 })
