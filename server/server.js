@@ -19,6 +19,9 @@ app.post('/todos',(req,res)=>{
         .catch(err => res.status(400).send(err));
 });
 
+app.get('/todos',(req,res)=>{
+    Todo.find().then(docs => res.send({todos:docs})).catch(err => res.status(400).send(err));
+});
 
 app.listen(port,()=> console.log('app listening on port: ',port));
 
