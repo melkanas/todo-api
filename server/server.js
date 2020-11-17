@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const {mongoose} = require('./db/mongoose');
+const {ObjectID} = require('mongoDb');
 const {Todo} = require('./models/todo');
 const {User} = require('./models/user');
 
@@ -22,6 +23,19 @@ app.post('/todos',(req,res)=>{
 app.get('/todos',(req,res)=>{
     Todo.find().then(docs => res.send({todos:docs})).catch(err => res.status(400).send(err));
 });
+
+app.get('/todos/:id',(req,res)=>{
+    let {id} = req.params;
+    if(!ObjectID.isValid(id))
+        res.status(404).send();
+    Todo.findById(id)
+        .then(docs => {
+            if(!docs)
+                return res.status(404).send();
+            res.status(200).send({todo:docs})
+        })
+        .catch(err => res.status(400).send({error:'internal error'}));
+})
 
 app.listen(port,()=> console.log('app listening on port: ',port));
 
