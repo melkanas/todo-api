@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon --exec \"mocha server/**/*.test.js \" "
+    "test": "nodemon --exec \"mocha server/**/*.test.js \" ",
+    "start": "node server/server.js"
   },
   "engines": {
     "node": "10.16.0"
