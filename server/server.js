@@ -28,7 +28,7 @@ app.delete('/todos/:id',(req,res)=>{
         .then((doc)=>{
          if(!doc)
             return res.status(404).send();
-        res.status(200).send({message:'this doc has been removed from database',doc});
+        res.status(200).send({todo:doc});
     })
     .catch(err => res.status(400).send());
 });
@@ -47,7 +47,7 @@ app.get('/todos/:id',(req,res)=>{
                 return res.status(404).send();
             res.status(200).send({todo:docs})
         })
-        .catch(err => res.status(400).send({error:'internal error'}));
+        .catch(err => res.status(404).send({error:'internal error'}));
 })
 
 app.listen(port,()=> console.log('app listening on port: ',port));
