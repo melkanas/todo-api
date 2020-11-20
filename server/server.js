@@ -61,10 +61,11 @@ app.patch('/todos/:id',(req,res)=>{
         body.completed = false;
         body.completedAt = null;
     }
-    Todo.findByIdAndUpdate(id,{$set:body},{$new:true}).then((todo)=>{
-        if(!todo)
+    Todo.findByIdAndUpdate(id,{$set:body},{new:true}).then((doc)=>{
+        if(!doc)
            return res.status(404).send()
-        res.send({todo})
+
+        res.send({todo:doc})
     }).catch(e=> res.status(404).send());
 })
 app.listen(port,()=> console.log('app listening on port: ',port));
