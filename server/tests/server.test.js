@@ -4,7 +4,7 @@ const {ObjectId} = require('mongoDb');
 const {app} = require('../server');
 const {Todo} = require('../models/todo');
 
-let todos = [{text:'workout',_id:new ObjectId()},{text:'meditate',_id:new ObjectId()},{text:'study for exam',_id:new ObjectId()}];
+let todos = [{text:'workout',_id:new ObjectId()},{text:'meditate',_id:new ObjectId(),completed:true,completedAt:333},{text:'study for exam',_id:new ObjectId()}];
 beforeEach((done)=>{
     Todo.remove({}).then(()=> Todo.insertMany(todos)).then(()=>done()).catch(err => done(err));
 });
@@ -102,6 +102,36 @@ describe('delete /todos/:id',()=>{
         .end(done);
     })
 
+});
+
+describe('patch /todos/:id',()=>{
+    it('should update the todo',(done)=>{
+        let id = todos[0]._id.toHexString();
+        let update = {text:'run',completed:true};
+        request(app)
+        .patch('/todos/'+id)
+        .send(update)
+        .expect(200)
+        .expect(res=>{
+            expect(res.body.todo.text).toBe(update.text);
+            expect(res.body.todo.completed).toBe(update.completed);
+            expect(res.body.todo.completedAt).toBeA('number');
+        })
+        .end(done)
+    });
+
+    it('should clear completedAt when todo is not completed',(done)=>{
+        let id = todos[0]._id.toHexString();
+        let update = {completed:false};
+        request(app)
+        .patch('/todos/'+id)
+        .send(update)
+        .expect(200)
+        .expect(res=>{
+            expect(res.body.todo.completedAt).toNotExist();
+        })
+        .end(done)
+    });
 
 
 })
