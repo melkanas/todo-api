@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config(); // env variables
 
-const uri = process.env.ATLAS_URI || 'mongodb://localhost:27017/TodoAPI-DB'
+const uri = process.env.ATLAS_URI;
 mongoose.Promise = global.Promise;
 
 mongoose.set('useFindAndModify', false);
