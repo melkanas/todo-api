@@ -8,6 +8,7 @@ const {ObjectID} = require('mongodb');
 const {Todo} = require('./models/todo');
 const {User} = require('./models/user');
 const {authenticate} = require('./middleware/authenticate');
+const bcrypt = require('bcryptjs');
 
 let port = process.env.PORT;
 
@@ -72,7 +73,7 @@ app.patch('/todos/:id',(req,res)=>{
 })
 
 // Users routes
-
+//users signup
 app.post('/users',(req,res)=>{
     let body = _.pick(req.body,['email','password']);
     let user = new User(body);
@@ -93,6 +94,19 @@ app.get('/users/me',authenticate,(req,res)=>{
     res.send(req.user);
 })
 
+
+app.post('/users/login',(req,res)=>{
+    let body = _.pick(req.body,['email','password']);
+    User.findByCredentials(body.email,body.password).then(user=>{
+        return user.generateAuthToken().then(token=>{
+            res.header('x-auth',token).send(user);
+        })
+    })
+    .catch(err=>{
+        res.status(400).send(err);
+    })
+}
+)
 app.listen(port,()=> console.log('app listening on port: ',port));
 
 module.exports = {app};

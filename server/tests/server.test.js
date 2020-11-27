@@ -179,7 +179,7 @@ describe('post /users',()=>{
             User.findOne({email:newuser.email}).then(user=> {
                 expect(user).toExist();
                 done();
-            })
+            }).catch(e=>done(e));
         });
     });
     it('should return validation errors if request invalid',(done)=>{
@@ -196,4 +196,28 @@ describe('post /users',()=>{
         .expect(400)
         .end(done);
     })
+});
+
+describe('Post users/login',()=>{
+    it('should login users with correct credentials',(done)=>{
+        request(app)
+        .post('/users/login')
+        .send({email:users[1].email,password:users[1].password})
+        .expect(200)
+        .expect(res=>{
+            expect(res.headers['x-auth']).toExist();
+        })
+        .end((err,res)=>{
+            if(err)
+                return done(err);
+            User.findById(users[1]._id).then(doc=>{
+                expect(doc.tokens[0]).toContain({
+                    access:'auth',
+                    token:res.headers['x-auth']
+                })
+                done();
+            }).catch(err=>done(err));
+        });
+
+    });
 })
