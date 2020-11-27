@@ -106,7 +106,14 @@ app.post('/users/login',(req,res)=>{
         res.status(400).send(err);
     })
 }
-)
+);
+//logout user
+app.delete('/users/me/token',authenticate,(req,res)=>{
+    let token = req.header('x-auth');
+    req.user.removeToken(token).then(result=>{
+        res.status(200).send({message:'logged out successfully'})
+    }).catch(e=> res.status(400).send());
+})
 app.listen(port,()=> console.log('app listening on port: ',port));
 
 module.exports = {app};
