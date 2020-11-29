@@ -16,6 +16,7 @@ describe('POST-todos',()=>{
 
         request(app)
             .post('/todos')
+            .set('x-auth',users[0].tokens[0].token)
             .send({text})
             .expect(200)
             .expect((res)=>expect(res.body.text).toBe(text))
@@ -35,8 +36,9 @@ describe('GET todos',()=>{
     it('should get all todos array',(done)=>{
         request(app)
         .get('/todos')
+        .set('x-auth',users[0].tokens[0].token)
         .expect(200)
-        .expect((res) => expect(res.body.todos.map(elt => elt.text)).toEqual(todos.map(elt=>elt.text)))
+        .expect((res) => expect(res.body.todos.map(elt => elt.text)).toEqual(todos.filter(todo=> (todo._creator == users[0]._id) ).map(elt=> elt.text)))
         .end(done);
     })
 });

@@ -20,7 +20,7 @@ const users = [
         password:'user2pass'
     }
 ]
-const todos = [{text:'workout',_id:new ObjectId()},{text:'meditate',_id:new ObjectId(),completed:true,completedAt:333},{text:'study for exam',_id:new ObjectId()}];
+const todos = [{text:'workout',_id:new ObjectId(),_creator:user1id},{text:'meditate',_id:new ObjectId(),completed:true,completedAt:333,_creator:user2id},{text:'study for exam',_id:new ObjectId(),_creator:user1id}];
 const populateTodos =  (done)=>{
     Todo.remove({}).then(()=> Todo.insertMany(todos)).then(()=>done()).catch(err => done(err));
 }

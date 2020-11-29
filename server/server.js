@@ -15,8 +15,8 @@ let port = process.env.PORT;
 const app = express();
 app.use(bodyParser.json());
 
-app.post('/todos',(req,res)=>{
-    let task = new Todo({text:req.body.text});
+app.post('/todos',authenticate,(req,res)=>{
+    let task = new Todo({text:req.body.text,_creator:req.user._id});
 
     task.save()
         .then(doc => res.send(doc))
@@ -36,8 +36,9 @@ app.delete('/todos/:id',(req,res)=>{
     .catch(err => res.status(400).send());
 });
 
-app.get('/todos',(req,res)=>{
-    Todo.find().then(docs => res.send({todos:docs})).catch(err => res.status(400).send(err));
+app.get('/todos',authenticate,(req,res)=>{
+    Todo.find({_creator:req.user._id})
+    .then(docs => res.send({todos:docs})).catch(err => res.status(400).send(err));
 });
 
 app.get('/todos/:id',(req,res)=>{
