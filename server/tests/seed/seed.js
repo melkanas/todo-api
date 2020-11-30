@@ -11,7 +11,7 @@ const users = [
         password:'user1pass',
         tokens:[{
             access:'auth',
-            token:jwt.sign({_id:user1id.toHexString(),access:'auth'},'secretsalt').toString()}
+            token:jwt.sign({_id:user1id.toHexString(),access:'auth'},process.env.JWT_SECRET).toString()}
         ]
     },
     {
@@ -20,7 +20,7 @@ const users = [
         password:'user2pass',
         tokens:[{
             access:'auth',
-            token:jwt.sign({_id:user2id.toHexString(),access:'auth'},'secretsalt').toString()}
+            token:jwt.sign({_id:user2id.toHexString(),access:'auth'},process.env.JWT_SECRET).toString()}
         ]
     }
 ]
