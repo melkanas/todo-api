@@ -23,11 +23,11 @@ app.post('/todos',authenticate,(req,res)=>{
         .catch(err => res.status(400).send(err));
 });
 
-app.delete('/todos/:id',(req,res)=>{
+app.delete('/todos/:id',authenticate,(req,res)=>{
     let {id} = req.params;
     if (!ObjectID.isValid(id))
         return res.status(404).send();
-    Todo.findByIdAndDelete(id)
+    Todo.findOneAndDelete({_id:id,_creator:req.user._id})
         .then((doc)=>{
          if(!doc)
             return res.status(404).send();
@@ -41,11 +41,11 @@ app.get('/todos',authenticate,(req,res)=>{
     .then(docs => res.send({todos:docs})).catch(err => res.status(400).send(err));
 });
 
-app.get('/todos/:id',(req,res)=>{
+app.get('/todos/:id',authenticate,(req,res)=>{
     let {id} = req.params;
     if(!ObjectID.isValid(id))
         return res.status(404).send();
-    Todo.findById(id)
+    Todo.findOne({_id:id,_creator:req.user._id})
         .then(docs => {
             if(!docs)
                 return res.status(404).send();
@@ -54,7 +54,7 @@ app.get('/todos/:id',(req,res)=>{
         .catch(err => res.status(404).send({error:'internal error'}));
 })
 
-app.patch('/todos/:id',(req,res)=>{
+app.patch('/todos/:id',authenticate,(req,res)=>{
     let {id} = req.params;
     let body = _.pick(req.body,['text','completed']);
     if(!ObjectID.isValid(id))
@@ -65,7 +65,7 @@ app.patch('/todos/:id',(req,res)=>{
         body.completed = false;
         body.completedAt = null;
     }
-    Todo.findByIdAndUpdate(id,{$set:body},{new:true}).then((doc)=>{
+    Todo.findOneAndUpdate({_id:id,_creator:req.user._id},{$set:body},{new:true}).then((doc)=>{
         if(!doc)
            return res.status(404).send()
 
@@ -101,7 +101,7 @@ app.post('/users/login',(req,res)=>{
     User.findByCredentials(body.email,body.password).then(user=>{
         return user.generateAuthToken().then(token=>{
             res.header('x-auth',token).send(user);
-        })
+        });
     })
     .catch(err=>{
         res.status(400).send(err);

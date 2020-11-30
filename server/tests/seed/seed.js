@@ -17,7 +17,11 @@ const users = [
     {
         _id:user2id,
         email:'usr2@email.com',
-        password:'user2pass'
+        password:'user2pass',
+        tokens:[{
+            access:'auth',
+            token:jwt.sign({_id:user2id.toHexString(),access:'auth'},'secretsalt').toString()}
+        ]
     }
 ]
 const todos = [{text:'workout',_id:new ObjectId(),_creator:user1id},{text:'meditate',_id:new ObjectId(),completed:true,completedAt:333,_creator:user2id},{text:'study for exam',_id:new ObjectId(),_creator:user1id}];
