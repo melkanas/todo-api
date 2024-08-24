@@ -26,11 +26,11 @@ const users = [
 ]
 const todos = [{text:'workout',_id:new ObjectId(),_creator:user1id},{text:'meditate',_id:new ObjectId(),completed:true,completedAt:333,_creator:user2id},{text:'study for exam',_id:new ObjectId(),_creator:user1id}];
 const populateTodos =  (done)=>{
-    Todo.remove({}).then(()=> Todo.insertMany(todos)).then(()=>done()).catch(err => done(err));
+    Todo.deleteMany({}).then(()=> Todo.insertMany(todos)).then(()=>done()).catch(err => done(err));
 }
 
 const populateUsers = (done)=>{
-    User.remove({}).then(()=>{
+    User.deleteMany({}).then(()=>{
         let user1 = new User(users[0]).save();
         let user2 = new User(users[1]).save();
         return Promise.all([user1,user2])
