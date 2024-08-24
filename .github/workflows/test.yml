@@ -22,7 +22,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Create config.json
-      run: echo "${{ secrets.TEST_CONFIG }}" > todo-api/server/config/config.json
+      run: echo "${{ secrets.TEST_CONFIG }}" > server/config/config.json
+    - name: Print config.json content
+      run: cat server/config/config.json
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
