@@ -115,6 +115,8 @@ app.delete('/users/me/token',authenticate,(req,res)=>{
         res.status(200).send({message:'logged out successfully'})
     }).catch(e=> res.status(400).send());
 })
-app.listen(port,()=> console.log('app listening on port: ',port));
-
+const server = app.listen(port,()=> console.log('app listening on port: ',port));
+app.close = ()=>{
+    server.close();
+}
 module.exports = {app};

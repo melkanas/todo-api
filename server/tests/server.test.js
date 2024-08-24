@@ -8,7 +8,7 @@ const { User } = require('../models/user');
 
 beforeEach(populateUsers);
 beforeEach(populateTodos);
-
+after(app.close)
 
 describe('POST-todos',()=>{
     it('should create a new todo in the database',(done)=>{
