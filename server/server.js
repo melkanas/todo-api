@@ -111,6 +111,7 @@ app.post('/users/login',(req,res)=>{
 //logout user
 app.delete('/users/me/token',authenticate,(req,res)=>{
     let token = req.header('x-auth');
+    throw new Error("check github test");
     req.user.removeToken(token).then(result=>{
         res.status(200).send({message:'logged out successfully'})
     }).catch(e=> res.status(400).send());
